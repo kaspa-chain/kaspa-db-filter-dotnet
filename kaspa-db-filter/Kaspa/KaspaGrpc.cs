@@ -2,9 +2,9 @@ using Grpc.Core;
 
 namespace Its.Kaspa.Filter.Kaspa;
 
-public static class KaspaGrpc
+public class KaspaGrpc : IKaspaGrpc
 {
-    public static async Task<GetBlocksResponseMessage> GetBlocks(IClient client, string blockHash)
+    public async Task<GetBlocksResponseMessage> GetBlocks(IClient client, string blockHash)
     {
         using var messageStream = client.GetRpcClient().MessageStream();
         var request = new KaspadRequest

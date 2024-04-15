@@ -8,6 +8,8 @@ public class Program
         //using var db = new KaspaContext();
 
         var client = new KaspadClient();
+        var kaspaGrpc = new KaspaGrpc();
+
         var blockHash = "9a51928b6741ae50dc15c6a8b3b681eec348d826fd71b392711b105e26ca4fde";
 
         bool isDone = false;
@@ -19,7 +21,7 @@ public class Program
 
             Console.WriteLine($"#### [{cnt}] Getting block [{blockHash}]");
 
-            var getBlckTask = KaspaGrpc.GetBlocks(client, blockHash);
+            var getBlckTask = kaspaGrpc.GetBlocks(client, blockHash);
             var respMsg = getBlckTask.Result;
 
             if (respMsg.Error != null)
