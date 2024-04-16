@@ -72,7 +72,8 @@ public class Program
                 Log.Information($"==== [{cnt}] Blocks size = [{blocks.Count}], BlockHashes size = [{blockHashes.Count}]");
                 foreach (var block in blocks)
                 {
-                    Log.Information($"==== [{cnt}] Block [{block.VerboseData.Hash}]");
+                    var transactions = block.Transactions;
+                    Log.Information($"==== [{cnt}] Block [{block.VerboseData.Hash}], Tx Count = [{transactions.Count}]");
                 }
 
                 if (blockHashes.Count > 0)
