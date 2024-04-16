@@ -2,6 +2,9 @@
 using Its.Kaspa.Filter.Context;
 using Its.Kaspa.Filter.Kaspa;
 using Its.Kaspa.Filter.Config;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 public class Program
 {
@@ -13,12 +16,30 @@ public class Program
         Log.Logger = log;
     }
 
+    private static IHostBuilder CreateDefaultBuilder(Config cfg)
+    {
+        var connStr = $"host={cfg.PgHost};port={cfg.PgPort};database={cfg.PgDatabase};user id={cfg.PgUser};password={cfg.PgPassword};";
+
+        return Host.CreateDefaultBuilder()
+            .ConfigureServices(services =>
+            {
+                services.AddScoped<IConfig, Config>(x => cfg);
+                services.AddDbContext<KaspaContext>(options => options.UseNpgsql(connStr));
+            });
+    }
+
     public static void Main(String[] args)
     {
-        IConfig cfg = new Config("appsettings.json");
+        var cfg = new Config("appsettings.json");
         InitLogger();
 
-        using var db = new KaspaContext(cfg);
+        var host = CreateDefaultBuilder(cfg).Build();
+        using (var scope = host.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<KaspaContext>();
+            db.Database.Migrate();
+        }
+
         var client = new KaspadClient(cfg);
         var kaspaGrpc = new KaspaGrpc();
 
