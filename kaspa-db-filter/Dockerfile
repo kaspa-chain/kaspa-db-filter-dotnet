@@ -12,9 +12,8 @@ WORKDIR /source
 
 # copy csproj and restore as distinct layers
 COPY kaspa-db-filter/ ./kaspa-db-filter/
-#COPY kaspa-db-filter/kaspa-db-filter.sln .
 
-RUN find .
+#RUN find .
 
 RUN dotnet restore kaspa-db-filter/kaspa-db-filter.csproj
 RUN dotnet publish kaspa-db-filter/kaspa-db-filter.csproj -c release -o /app --no-restore -p:PackageVersion=${version}
