@@ -8,7 +8,8 @@ public class Config : IConfig
     public Config(string appsSetting)
     {
         var builder = new ConfigurationBuilder()
-                .AddJsonFile(appsSetting, true, true);
+                .AddJsonFile(appsSetting, true, true)
+                .AddEnvironmentVariables();
     
         var config = builder.Build();
 
