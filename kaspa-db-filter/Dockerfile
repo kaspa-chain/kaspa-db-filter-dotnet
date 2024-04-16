@@ -11,8 +11,8 @@ RUN apt-get -y update \
 WORKDIR /source
 
 # copy csproj and restore as distinct layers
-COPY kaspa-db-filter/* ./
-COPY kaspa-db-filter/kaspa-db-filter.sln .
+COPY kaspa-db-filter/* ./kaspa-db-filter/
+#COPY kaspa-db-filter/kaspa-db-filter.sln .
 
 RUN find .
 
