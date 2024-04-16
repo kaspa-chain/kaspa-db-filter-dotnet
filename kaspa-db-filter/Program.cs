@@ -1,16 +1,28 @@
-﻿using Its.Kaspa.Filter.Context;
+﻿using Serilog;
+using Its.Kaspa.Filter.Context;
 using Its.Kaspa.Filter.Kaspa;
+using Its.Kaspa.Filter.Config;
 
 public class Program
 {
+    private static void InitLogger()
+    {
+        var log = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
+        Log.Logger = log;
+    }
+
     public static void Main(String[] args)
     {
-        //using var db = new KaspaContext();
+        IConfig cfg = new Config("appsettings.json");
+        InitLogger();
 
-        var client = new KaspadClient();
+        using var db = new KaspaContext(cfg);
+        var client = new KaspadClient(cfg);
         var kaspaGrpc = new KaspaGrpc();
 
-        var blockHash = "9a51928b6741ae50dc15c6a8b3b681eec348d826fd71b392711b105e26ca4fde";
+        var blockHash = cfg.KaspaStartBlockHash;
 
         bool isDone = false;
         int cnt = 0;
@@ -19,7 +31,7 @@ public class Program
         {
             cnt++;
 
-            Console.WriteLine($"#### [{cnt}] Getting block [{blockHash}]");
+            Log.Information($"#### [{cnt}] Getting block [{blockHash}]");
 
             var getBlckTask = kaspaGrpc.GetBlocks(client, blockHash);
             var respMsg = getBlckTask.Result;
@@ -28,17 +40,18 @@ public class Program
             {
                 //Found error returned
                 isDone = true;
-                Console.WriteLine($"[{cnt}] Exit with error [{respMsg.Error.Message}]");
+
+                Log.Information($"[{cnt}] Exit with error [{respMsg.Error.Message}]");
             }
             else
             {
                 var blocks = respMsg.Blocks;
                 var blockHashes = respMsg.BlockHashes;
 
-                Console.WriteLine($"==== [{cnt}] Blocks size = [{blocks.Count}], BlockHashes size = [{blockHashes.Count}]");
+                Log.Information($"==== [{cnt}] Blocks size = [{blocks.Count}], BlockHashes size = [{blockHashes.Count}]");
                 foreach (var block in blocks)
                 {
-                    Console.WriteLine($"==== [{cnt}] Block [{block.VerboseData.Hash}]");
+                    Log.Information($"==== [{cnt}] Block [{block.VerboseData.Hash}]");
                 }
 
                 if (blockHashes.Count > 0)
