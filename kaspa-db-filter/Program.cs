@@ -30,8 +30,8 @@ public class Program
 
     public static void Main(String[] args)
     {
-        var cfg = new Config("appsettings.json");
         InitLogger();
+        var cfg = new Config("appsettings.json");
 
         var host = CreateDefaultBuilder(cfg).Build();
         using (var scope = host.Services.CreateScope())

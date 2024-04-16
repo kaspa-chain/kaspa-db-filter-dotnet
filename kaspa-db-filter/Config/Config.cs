@@ -1,3 +1,4 @@
+using Serilog;
 using Microsoft.Extensions.Configuration;
 
 namespace Its.Kaspa.Filter.Config;
@@ -19,6 +20,13 @@ public class Config : IConfig
         PgPassword = config["PgPassword"]!;
         PgDatabase = config["PgDatabase"]!;
         PgUser = config["PgUser"]!;
+
+        Log.Information($"PgHost=[{PgHost}]");
+        Log.Information($"PgPort=[{PgPort}]");
+        Log.Information($"PgDatabase=[{PgDatabase}]");
+        Log.Information($"PgUser=[{PgUser}]");
+        Log.Information($"KaspaNodeUrl=[{KaspaNodeUrl}]");
+        Log.Information($"KaspaStartBlockHash=[{KaspaStartBlockHash}]");
     }
 
     public string PgHost { get; }
