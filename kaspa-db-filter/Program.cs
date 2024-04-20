@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+//genesis - 58c2d4199e21f910d1571d114969cecef48f09f934d42ccb6a281a15868f2999
+
 public class Program
 {
     private static void InitLogger()
@@ -14,6 +16,14 @@ public class Program
             .WriteTo.Console()
             .CreateLogger();
         Log.Logger = log;
+    }
+
+    public static string UnixTimeStampToDateTime(double unixTimeStamp)
+    {
+        TimeSpan time = TimeSpan.FromMilliseconds(unixTimeStamp);
+        DateTime dateTime = new DateTime(1970, 1, 1) + time;
+
+        return dateTime.ToString("yyyy/MM/dd hh:mm:ss tt");
     }
 
     private static IHostBuilder CreateDefaultBuilder(Config cfg)
@@ -69,6 +79,21 @@ public class Program
                 var blocks = respMsg.Blocks;
                 var blockHashes = respMsg.BlockHashes;
 
+                var blockItSelf = blocks[0];
+                var selectedParentHash = blockItSelf.VerboseData.SelectedParentHash;
+                
+                var blueScore = blockItSelf.VerboseData.BlueScore;
+                var daaScore = blockItSelf.Header.DaaScore;
+                var parentCount = blockItSelf.Header.Parents[0].ParentHashes.Count;
+                var blockTs = UnixTimeStampToDateTime(blockItSelf.Header.Timestamp);
+
+                blockHash = selectedParentHash;
+
+                Log.Information($"==== [{cnt}] [{blockTs}] Blocks size = [{blocks.Count}], Parent Count = [{parentCount}]");
+                Log.Information($"==== [{cnt}] BlueScore = [{blueScore}], DaaScore=[{daaScore}]");
+                Log.Information($"==== [{cnt}] Selected Parent Hash = [{selectedParentHash}]");
+
+/*
                 Log.Information($"==== [{cnt}] Blocks size = [{blocks.Count}], BlockHashes size = [{blockHashes.Count}]");
                 foreach (var block in blocks)
                 {
@@ -80,6 +105,7 @@ public class Program
                 {
                     blockHash = blockHashes[blockHashes.Count-1];
                 }
+*/
             }
 
             Thread.Sleep(2000);
