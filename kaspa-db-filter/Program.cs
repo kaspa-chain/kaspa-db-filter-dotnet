@@ -18,6 +18,7 @@ public class Program
         Log.Logger = log;
     }
 
+//"https://node.kaspium.io:16110",
     public static string UnixTimeStampToDateTime(double unixTimeStamp)
     {
         TimeSpan time = TimeSpan.FromMilliseconds(unixTimeStamp);
@@ -85,11 +86,12 @@ public class Program
                 var blueScore = blockItSelf.VerboseData.BlueScore;
                 var daaScore = blockItSelf.Header.DaaScore;
                 var parentCount = blockItSelf.Header.Parents[0].ParentHashes.Count;
+                var blocksParentCount = blockItSelf.Header.Parents.Count;
                 var blockTs = UnixTimeStampToDateTime(blockItSelf.Header.Timestamp);
 
                 blockHash = selectedParentHash;
 
-                Log.Information($"==== [{cnt}] [{blockTs}] Blocks size = [{blocks.Count}], Parent Count = [{parentCount}]");
+                Log.Information($"==== [{cnt}] [{blockTs}] Blocks size = [{blocks.Count}], Parent Count = [{parentCount}/{blocksParentCount}]");
                 Log.Information($"==== [{cnt}] BlueScore = [{blueScore}], DaaScore=[{daaScore}]");
                 Log.Information($"==== [{cnt}] Selected Parent Hash = [{selectedParentHash}]");
 
@@ -108,7 +110,7 @@ public class Program
 */
             }
 
-            Thread.Sleep(2000);
+            //Thread.Sleep(2);
         }
     }
 }

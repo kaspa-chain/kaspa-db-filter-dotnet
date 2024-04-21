@@ -14,7 +14,10 @@ public class KaspadClient : RPC.RPCClient, IDisposable, IClient
         //var url = "https://grpc-dev.kaspa-chain.net:16110";
         var url = cfg.KaspaNodeUrl; //"https://node.kaspium.io:16110";
 
-        channel = GrpcChannel.ForAddress(url!);
+        channel = GrpcChannel.ForAddress(url!, new GrpcChannelOptions
+        {
+            MaxReceiveMessageSize = 5 * 1024 * 1024, // 5 MB
+        });
         client = new RPC.RPCClient(channel);
     }
 
