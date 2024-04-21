@@ -110,7 +110,11 @@ public class Program
 */
             }
 
-            //Thread.Sleep(2);
+            int x = 0;
+            if (Int32.TryParse(cfg.DelayMs, out x))
+            {
+                Thread.Sleep(x);
+            }
         }
     }
 }

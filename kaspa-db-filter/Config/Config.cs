@@ -21,6 +21,7 @@ public class Config : IConfig
         PgPassword = config["PgPassword"]!;
         PgDatabase = config["PgDatabase"]!;
         PgUser = config["PgUser"]!;
+        DelayMs = config["DelayMs"]!;
 
         Log.Information($"PgHost=[{PgHost}]");
         Log.Information($"PgPort=[{PgPort}]");
@@ -28,6 +29,7 @@ public class Config : IConfig
         Log.Information($"PgUser=[{PgUser}]");
         Log.Information($"KaspaNodeUrl=[{KaspaNodeUrl}]");
         Log.Information($"KaspaStartBlockHash=[{KaspaStartBlockHash}]");
+        Log.Information($"DelayMs=[{DelayMs}]");
     }
 
     public string PgHost { get; }
@@ -37,4 +39,5 @@ public class Config : IConfig
     public string PgPassword { get; }
     public string KaspaNodeUrl { get; }
     public string KaspaStartBlockHash { get; }
+    public string DelayMs { get; }
 }
